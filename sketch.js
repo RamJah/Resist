@@ -12,8 +12,8 @@ const palette = [
   [120, 15, 40]
 ];
 
-const BASE_CAP = 60;
-const REVIVAL_DELAY = 45000; // 45 seconds
+const BASE_CAP = 30;
+const REVIVAL_DELAY = 30000; // 45 seconds
 
 let phase = "active";
 let capReachedAt = 0;
