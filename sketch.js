@@ -96,32 +96,47 @@ text("SWISH TO CUT", width / 2, height / 2);
   }
 
   // REVIVAL AFTER 42 SECONDS
+// REVIVAL
 
-  if (
-    phase === "capped" &&
-    millis() - capReachedAt > REVIVAL_DELAY
-  ) {
-    phase = "active";
+if (
+  phase === "capped" &&
+  millis() - capReachedAt > REVIVAL_DELAY
+) {
+  phase = "active";
 
-    for (let a of algae) {
-      a.dead = false;
-      a.length = 0;
-      a.maxLength = random(1200, 2200);
-      a.growthSpeed = random(1.2, 2.5);
-      a.targetAngle = random(TWO_PI);
+  for (let a of algae) {
 
-      if (a.points.length >= 1) {
-        let len = a.points.length;
-        let tip = a.points[len - 1];
-        let prev = a.points[len >= 2 ? len - 2 : 0];
+    a.dead = false;
+    a.length = 0;
 
-        a.angle = atan2(
-          tip.y - prev.y,
-          tip.x - prev.x
-        );
-      }
+    a.maxLength = random(1200, 2200);
+    a.growthSpeed = random(1.2, 2.5);
+    a.targetAngle = random(TWO_PI);
+
+    // CHANGE COLOR ON REVIVAL
+
+    let reviveBlack = random() < 0.2;
+
+    a.isBlack = reviveBlack;
+
+    a.bodyColor = reviveBlack
+      ? color(0, 200)
+      : color(...random(palette), 95);
+
+    if (a.points.length >= 1) {
+
+      let len = a.points.length;
+
+      let tip = a.points[len - 1];
+      let prev = a.points[len >= 2 ? len - 2 : 0];
+
+      a.angle = atan2(
+        tip.y - prev.y,
+        tip.x - prev.x
+      );
     }
   }
+}
 
   // UPDATE + DRAW
 
