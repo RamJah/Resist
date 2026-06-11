@@ -13,7 +13,7 @@ const palette = [
 ];
 
 const BASE_CAP = 40;
-const REVIVAL_DELAY = 30000; // 45 seconds
+const REVIVAL_DELAY = 30000; // 30 seconds
 
 let phase = "active";
 let capReachedAt = 0;
@@ -96,47 +96,32 @@ text("SWISH TO CUT", width / 2, height / 2);
   }
 
   // REVIVAL AFTER 42 SECONDS
-// REVIVAL
 
-if (
-  phase === "capped" &&
-  millis() - capReachedAt > REVIVAL_DELAY
-) {
-  phase = "active";
+  if (
+    phase === "capped" &&
+    millis() - capReachedAt > REVIVAL_DELAY
+  ) {
+    phase = "active";
 
-  for (let a of algae) {
+    for (let a of algae) {
+      a.dead = false;
+      a.length = 0;
+      a.maxLength = random(1200, 2200);
+      a.growthSpeed = random(1.2, 2.5);
+      a.targetAngle = random(TWO_PI);
 
-    a.dead = false;
-    a.length = 0;
+      if (a.points.length >= 1) {
+        let len = a.points.length;
+        let tip = a.points[len - 1];
+        let prev = a.points[len >= 2 ? len - 2 : 0];
 
-    a.maxLength = random(1200, 2200);
-    a.growthSpeed = random(1.2, 2.5);
-    a.targetAngle = random(TWO_PI);
-
-    // CHANGE COLOR ON REVIVAL
-
-    let reviveBlack = random() < 0.2;
-
-    a.isBlack = reviveBlack;
-
-    a.bodyColor = reviveBlack
-      ? color(0, 200)
-      : color(...random(palette), 95);
-
-    if (a.points.length >= 1) {
-
-      let len = a.points.length;
-
-      let tip = a.points[len - 1];
-      let prev = a.points[len >= 2 ? len - 2 : 0];
-
-      a.angle = atan2(
-        tip.y - prev.y,
-        tip.x - prev.x
-      );
+        a.angle = atan2(
+          tip.y - prev.y,
+          tip.x - prev.x
+        );
+      }
     }
   }
-}
 
   // UPDATE + DRAW
 
@@ -188,7 +173,7 @@ class Algae {
 
     this.length = 0;
     this.maxLength = random(1200, 2200);
-    this.growthSpeed = random(1.2, 2.5);
+    this.growthSpeed = random(0.6, 1.6);
 
     this.baseWidth = random(10, 22);
 
@@ -203,7 +188,7 @@ class Algae {
       bodyColor ||
       (
         isBlack
-          ? color(0, 180)
+          ? color(0)
           : color(...random(palette), 95)
       );
   }
@@ -219,15 +204,21 @@ class Algae {
     let last =
       this.points[this.points.length - 1];
 
-    if (
-      last.x < 0 ||
-      last.x > width ||
-      last.y < 0 ||
-      last.y > height
-    ) {
-      this.dead = true;
-      return;
-    }
+   let margin = 100;
+
+if (last.x < margin) {
+  this.targetAngle = 0;
+}
+else if (last.x > width - margin) {
+  this.targetAngle = PI;
+}
+
+if (last.y < margin) {
+  this.targetAngle = HALF_PI;
+}
+else if (last.y > height - margin) {
+  this.targetAngle = -HALF_PI;
+}
 
     if (this.length > this.maxLength) return;
 
@@ -286,7 +277,7 @@ class Algae {
 
     let newColor =
       spawnBlack
-        ? color(0, 200)
+        ? color(0)
         : color(
             ...random(palette),
             95
@@ -413,9 +404,12 @@ class Algae {
     }
 
     fill(this.bodyColor);
-
-    stroke(255, 40);
-    strokeWeight(1.2);
+if (this.isBlack) {
+  stroke(70, 50, 35, 220);
+} else {
+  stroke(0,120);
+}
+strokeWeight(0.5);
 
     beginShape();
 
