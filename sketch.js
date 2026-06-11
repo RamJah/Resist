@@ -405,9 +405,9 @@ else if (last.y > height - margin) {
 
     fill(this.bodyColor);
 if (this.isBlack) {
-  stroke(70, 50, 35, 220);
+  stroke(110, 80, 50, 180);
 } else {
-  stroke(0,120);
+  stroke(90, 60, 35,180);
 }
 strokeWeight(0.5);
 
