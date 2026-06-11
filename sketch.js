@@ -172,8 +172,8 @@ class Algae {
     this.angle = angle;
 
     this.length = 0;
-    this.maxLength = random(1200, 2200);
-    this.growthSpeed = random(0.6, 1.6);
+    this.maxLength = random(2200, 3200);
+    this.growthSpeed = random(1, 1.8);
 
     this.baseWidth = random(10, 22);
 
